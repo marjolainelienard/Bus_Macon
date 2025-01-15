@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte Interactive de Coutances</title>
+    <title>Carte avec fichier GeoJSON</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
@@ -15,27 +15,21 @@
     </style>
 </head>
 <body>
-    <h1>Carte Interactive de Coutances</h1>
+    <h1>Carte avec fichier GeoJSON</h1>
     <div id="map"></div>
 
     <script>
-        // Créer la carte et définir sa vue initiale (Coutances, avec un zoom de niveau 13)
-        var map = L.map('map').setView([49.0506, -1.4856], 13); // Coordonnées de Coutances
+        // Créer la carte et définir sa vue initiale
+        var map = L.map('map').setView([49.0506, -1.4856], 13); // Coordonnées de Coutances (exemple)
 
         // Ajouter le fond de carte OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Exemple de marker pour un point d'intérêt à Coutances
-        L.marker([49.056210, -1.434223]).addTo(map)
-            .bindPopup('Centre de Coutances')
-            .openPopup();
-
-            // Charger le fichier GeoJSON depuis le même dossier que le fichier HTML
-        var geojsonLayer = new L.GeoJSON.AJAX("network.geojson"); // Fichier GeoJSON dans le même dossier
+        // Charger le fichier GeoJSON depuis GitHub
+        var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson"); // Remplacer par ton URL
         geojsonLayer.addTo(map);
-        
     </script>
 </body>
 </html>
