@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Interactive du Réseau de Bus de Mâcon</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Réseau de Bus de Mâcon - Carte Interactive</h1>
+    <div id="map"></div>
+
+    <script>
+        // Créer la carte et définir sa vue initiale (Mâcon, avec un zoom de niveau 13)
+        var map = L.map('map').setView([49.055413, 4.436811]); // Corriger la parenthèse et les coordonnées
+
+        // Ajouter le fond de carte OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fonction pour définir un style pour chaque type de géométrie
+        function getStyle(feature) {
+            switch (feature.geometry.type) {
+                case 'Point':
+                    return {
+                        radius: 6,         // Taille du point
+                        fillColor: "red",  // Couleur de remplissage
+                        color: "white",    // Couleur du contour
+                        weight: 1,         // Épaisseur du contour
+                        opacity: 0.8,      // Opacité
+                        fillOpacity: 0.8   // Opacité du remplissage
+                    };
+                case 'LineString':
+                    return {
+              
