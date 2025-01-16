@@ -41,9 +41,9 @@
                 // Créer le marqueur avec l'icône personnalisée
                 var marker = L.marker(latlng, { icon: customMarker });
 
-                // Récupérer les informations du GeoJSON (nom de l'arrêt et numéro du bus)
-                var nomArret = feature.properties.name || "Nom d'arrêt inconnu";
-                var numeroBus = feature.properties.lignes || "Numéro de bus inconnu";
+                // Récupérer les informations du GeoJSON (nom de l'arrêt et ligne de bus)
+                var nomArret = feature.properties.name || "Nom d'arrêt inconnu"; // Nom de l'arrêt
+                var numeroBus = feature.properties.lignes || "Numéro de bus inconnu"; // Numéro du bus (ligne)
 
                 // Créer un contenu pour le popup avec les infos du GeoJSON
                 var popupContent = "<strong>" + nomArret + "</strong><br/>" +
