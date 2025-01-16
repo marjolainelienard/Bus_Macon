@@ -20,12 +20,32 @@
 
     <script>
         // Créer la carte et définir sa vue initiale
-        var map = L.map('map').setView([49.0506, -1.4856], 13); // Coordonnées de Coutances (exemple)
+        var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
         // Ajouter le fond de carte OpenStreetMap
         L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+         // Définir un style personnalisé pour les points (marqueurs)
+        var customMarker = L.icon({
+            iconUrl: 'point.png',  // Remplace par l'URL de ton icône
+            iconSize: [32, 32],  // Taille de l'icône
+            iconAnchor: [16, 32],  // Point d'ancrage de l'icône
+            popupAnchor: [0, -32]  // Position du popup par rapport à l'icône
+        });
+
+        // Fonction pour définir un style pour les points (marker)
+        function styleFeature(feature) {
+            return {
+                radius: 8,  // Rayon du cercle du marqueur
+                fillColor: "#ff7800",  // Couleur de remplissage
+                color: "#000",  // Couleur de la bordure
+                weight: 1,  // Épaisseur de la bordure
+                opacity: 1,  // Opacité de la bordure
+                fillOpacity: 0.8  // Opacité du remplissage
+            };
+        }
 
         // Charger le fichier GeoJSON depuis GitHub
         var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson"); // Remplacer par ton URL
