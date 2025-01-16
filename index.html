@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <style>
         #map {
-            height: 600px;
+            height: 100vh; /* La carte occupe toute la hauteur de la fenêtre */
             width: 100%;
         }
     </style>
@@ -22,17 +22,15 @@
         // Créer la carte et définir sa vue initiale
         var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
-           // Ajouter le fond de carte CartoDB Positron
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://carto.com/attributions">CartoDB</a>',
-            maxZoom: 19  // Niveau de zoom maximal
+        // Ajouter le fond de carte OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
-
 
         // Créer l'icône personnalisée avec une taille réduite
         var customMarker = L.icon({
             iconUrl: 'point.png',  // Assure-toi que le chemin vers ton icône est correct
-            iconSize: [10, 10],  // Taille de l'icône (ajustée à 16x16 pixels)
+            iconSize: [10, 10],  // Taille de l'icône (ajustée à 10x10 pixels)
             iconAnchor: [5, 10],  // Point d'ancrage ajusté à la nouvelle taille
             popupAnchor: [0, -10]  // Position du popup ajustée
         });
@@ -44,11 +42,12 @@
                 var marker = L.marker(latlng, { icon: customMarker });
 
                 // Récupérer les informations du GeoJSON (nom de l'arrêt et numéro du bus)
-                var nomArret = feature.properties.name || "Nom d'arrêt inconnu"; // Changement ici : utilisation de "name"
-                var numeroBus = feature.properties.code || "Numéro de bus inconnu"; // Changement ici : utilisation de "code"
+                var nomArret = feature.properties.name || "Nom d'arrêt inconnu";
+                var numeroBus = feature.properties.code || "Numéro de bus inconnu";
 
                 // Créer un contenu pour le popup avec les infos du GeoJSON
-                var popupContent = "<strong>" + nomArret + "</strong><br/>" + "Numéro du bus : " + numeroBus;
+                var popupContent = "<strong>" + nomArret + "</strong><br/>" +
+                                   "Numéro du bus : " + numeroBus;
 
                 // Ajouter un popup au clic sur le marqueur
                 marker.bindPopup(popupContent);
@@ -60,7 +59,6 @@
 
         // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
-
     </script>
 </body>
 </html>
