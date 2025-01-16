@@ -62,6 +62,16 @@ console.log("Icône chargée :", customMarker.options.iconUrl);
         // Charger le fichier GeoJSON depuis GitHub
         var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson"); // Remplacer par ton URL
         geojsonLayer.addTo(map);
+
+        // Charger le fichier GeoJSON
+var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: customMarker });
+    }
+});
+geojsonLayer.addTo(map);
+
+
     </script>
 </body>
 </html>
