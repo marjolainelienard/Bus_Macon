@@ -42,7 +42,7 @@
                 var marker = L.marker(latlng, { icon: customMarker });
 
                 // Récupérer les informations du GeoJSON (nom de l'arrêt et numéro du bus)
-                var nomArret = feature.properties.nom_arret; // Assure-toi que cette propriété existe dans ton GeoJSON
+                var name = feature.properties.nom_arret; // Assure-toi que cette propriété existe dans ton GeoJSON
                 var numeroBus = feature.properties.numero_bus; // Idem ici
 
                 // Créer un contenu pour le popup avec les infos du GeoJSON
