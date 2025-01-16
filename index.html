@@ -27,19 +27,32 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Créer l'icône personnalisée
+        // Créer l'icône personnalisée avec une taille réduite
         var customMarker = L.icon({
             iconUrl: 'point.png',  // Assure-toi que le chemin vers ton icône est correct
-            iconSize: [16, 16],  // Taille de l'icône
-            iconAnchor: [16, 32],  // Point d'ancrage de l'icône
-            popupAnchor: [0, -32]  // Position du popup par rapport à l'icône
+            iconSize: [16, 16],  // Taille de l'icône (ajustée à 16x16 pixels)
+            iconAnchor: [8, 16],  // Point d'ancrage ajusté à la nouvelle taille
+            popupAnchor: [0, -16]  // Position du popup ajustée
         });
 
         // Charger le fichier GeoJSON depuis GitHub et appliquer l'icône personnalisée à tous les points
         var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
             pointToLayer: function (feature, latlng) {
-                // Retourne un marqueur avec l'icône personnalisée
-                return L.marker(latlng, { icon: customMarker });
+                // Créer le marqueur avec l'icône personnalisée
+                var marker = L.marker(latlng, { icon: customMarker });
+
+                // Récupérer les informations du GeoJSON (nom de l'arrêt et numéro du bus)
+                var nomArret = feature.properties.nom_arret; // Assure-toi que cette propriété existe dans ton GeoJSON
+                var numeroBus = feature.properties.numero_bus; // Idem ici
+
+                // Créer un contenu pour le popup avec les infos du GeoJSON
+                var popupContent = "<strong>" + nomArret + "</strong><br/>" + "Numéro du bus : " + numeroBus;
+
+                // Ajouter un popup au clic sur le marqueur
+                marker.bindPopup(popupContent);
+
+                // Retourner le marqueur
+                return marker;
             }
         });
 
