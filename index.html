@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte avec fichier GeoJSON</title>
+    <title>Carte avec fichier GeoJSON et SVG</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <h1>Carte avec fichier GeoJSON</h1>
+    <h1>Carte avec fichier GeoJSON et lignes SVG</h1>
     <div id="map"></div>
 
     <script>
@@ -24,8 +24,8 @@
 
         // Ajouter le fond de carte CartoDB
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors, © CartoDB'
-}).addTo(map);
+            attribution: '© OpenStreetMap contributors, © CartoDB'
+        }).addTo(map);
 
         // Créer l'icône personnalisée avec une taille réduite
         var customMarker = L.icon({
@@ -59,6 +59,13 @@
 
         // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
+
+        // Définir les limites géographiques de ton SVG (ajuste ces coordonnées en fonction de ton SVG)
+        var bounds = [[48.5, -2.0], [49.5, -1.0]]; // Coordonnées à ajuster selon ton SVG
+
+        // Ajouter l'overlay SVG sur la carte
+        L.imageOverlay('path/to/traces.svg', bounds).addTo(map);
+
     </script>
 </body>
 </html>
