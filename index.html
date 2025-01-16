@@ -27,50 +27,24 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-         // Définir un style personnalisé pour les points (marqueurs)
+        // Créer l'icône personnalisée
         var customMarker = L.icon({
-            iconUrl: 'file:///Users/marjolainelienard/Desktop/Interactif%20/HTML/point.png',  // Remplace par l'URL de ton icône
-            iconSize: [32, 32],  // Taille de l'icône
+            iconUrl: 'point.png',  // Assure-toi que le chemin vers ton icône est correct
+            iconSize: [16, 16],  // Taille de l'icône
             iconAnchor: [16, 32],  // Point d'ancrage de l'icône
             popupAnchor: [0, -32]  // Position du popup par rapport à l'icône
         });
 
-        var customMarker = L.icon({
-    iconUrl: 'point.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-});
+        // Charger le fichier GeoJSON depuis GitHub et appliquer l'icône personnalisée à tous les points
+        var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
+            pointToLayer: function (feature, latlng) {
+                // Retourne un marqueur avec l'icône personnalisée
+                return L.marker(latlng, { icon: customMarker });
+            }
+        });
 
-// Afficher un message de succès ou d'échec dans la console
-customMarker.options.iconUrl = 'point.png';
-console.log("Icône chargée :", customMarker.options.iconUrl);
-
-
-        // Fonction pour définir un style pour les points (marker)
-        function styleFeature(feature) {
-            return {
-                radius: 8,  // Rayon du cercle du marqueur
-                fillColor: "#ff7800",  // Couleur de remplissage
-                color: "#000",  // Couleur de la bordure
-                weight: 1,  // Épaisseur de la bordure
-                opacity: 1,  // Opacité de la bordure
-                fillOpacity: 0.8  // Opacité du remplissage
-            };
-        }
-
-        // Charger le fichier GeoJSON depuis GitHub
-        var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson"); // Remplacer par ton URL
+        // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
-
-        // Charger le fichier GeoJSON
-var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
-    pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, { icon: customMarker });
-    }
-});
-geojsonLayer.addTo(map);
-
 
     </script>
 </body>
