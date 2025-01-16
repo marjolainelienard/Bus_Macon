@@ -46,7 +46,7 @@
                 var numeroBus = feature.properties.numero_bus; // Idem ici
 
                 // Créer un contenu pour le popup avec les infos du GeoJSON
-                var popupContent = "<strong>" + nomArret + "</strong><br/>" + "Numéro du bus : " + numeroBus;
+                var popupContent = "<strong>" + name + "</strong><br/>" + "Numéro du bus : " + numeroBus;
 
                 // Ajouter un popup au clic sur le marqueur
                 marker.bindPopup(popupContent);
