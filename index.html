@@ -43,7 +43,7 @@
 
                 // Récupérer les informations du GeoJSON (nom de l'arrêt et numéro du bus)
                 var nomArret = feature.properties.name || "Nom d'arrêt inconnu";
-                var numeroBus = feature.properties.code || "Numéro de bus inconnu";
+                var numeroBus = feature.properties.lignes || "Numéro de bus inconnu";
 
                 // Créer un contenu pour le popup avec les infos du GeoJSON
                 var popupContent = "<strong>" + nomArret + "</strong><br/>" +
