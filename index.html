@@ -22,10 +22,10 @@
         // Créer la carte et définir sa vue initiale
         var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
-        // Ajouter le fond de carte OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+        // Ajouter le fond de carte CartoDB
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors, © CartoDB'
+}).addTo(map);
 
         // Créer l'icône personnalisée avec une taille réduite
         var customMarker = L.icon({
