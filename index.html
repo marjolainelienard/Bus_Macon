@@ -60,11 +60,13 @@
         // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
 
-        // Définir les limites géographiques de ton SVG (ajuste ces coordonnées en fonction de ton SVG)
-        var bounds = [[48.5, -2.0], [49.5, -1.0]]; // Coordonnées à ajuster selon ton SVG
+// Définir les limites géographiques de ton SVG
+var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
 
-        // Ajouter l'overlay SVG sur la carte
-        L.imageOverlay('path/to/traces.svg', bounds).addTo(map);
+// Ajouter l'overlay SVG représentant les lignes de bus sur la carte
+var svgOverlay = L.imageOverlay('traces.svg', bounds); // Assure-toi que le chemin de ton SVG est correct
+svgOverlay.addTo(map);
+
 
     </script>
 </body>
