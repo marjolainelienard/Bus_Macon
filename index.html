@@ -35,6 +35,18 @@
             popupAnchor: [0, -32]  // Position du popup par rapport à l'icône
         });
 
+        var customMarker = L.icon({
+    iconUrl: 'point.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+});
+
+// Afficher un message de succès ou d'échec dans la console
+customMarker.options.iconUrl = 'point.png';
+console.log("Icône chargée :", customMarker.options.iconUrl);
+
+
         // Fonction pour définir un style pour les points (marker)
         function styleFeature(feature) {
             return {
