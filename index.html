@@ -3,112 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte 3D avec MapLibre, GeoJSON et PNG</title>
-    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.css' />
-    <script src='https://unpkg.com/maplibre-gl@5.0.1/dist/maplibre-gl.js'></script>
+    <title>Carte avec fond Leaflet, GeoJSON et PNG</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
-        html, body, #map { height: 100%; }
+        #map {
+            height: 100vh; /* La carte occupe toute la hauteur de la fenêtre */
+            width: 100%;
+        }
     </style>
 </head>
 <body>
-    <h1>Carte 3D avec MapLibre, fichier GeoJSON et PNG</h1>
+    <h1>Carte avec fond Leaflet, fichier GeoJSON et PNG</h1>
     <div id="map"></div>
 
     <script>
-        const MAPTILER_KEY = 'WvVtTTIBfHqjgqk8z7wR';  // Votre clé API MapTiler
+        // Créer la carte et définir sa vue initiale
+        var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
-        // Créer la carte MapLibre avec fond 3D
-        const map = new maplibregl.Map({
-            style: `https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_KEY}`,  // Style de la carte
-            center: [-1.436042, 49.053291],  // Coordonnées de Coutances (exemple)
-            zoom: 15.5,
-            pitch: 45,  // Inclinaison pour voir les bâtiments en 3D
-            bearing: -17.6,  // Rotation pour une vue plus intéressante
-            container: 'map',
-            canvasContextAttributes: { antialias: true }
+        // Ajouter un fond de carte OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Créer l'icône personnalisée avec une taille réduite
+        var customMarker = L.icon({
+            iconUrl: 'point.png',  // Assure-toi que le chemin vers ton icône est correct
+            iconSize: [10, 10],  // Taille de l'icône (ajustée à 10x10 pixels)
+            iconAnchor: [5, 10],  // Point d'ancrage ajusté à la nouvelle taille
+            popupAnchor: [0, -10]  // Position du popup ajustée
         });
 
-        map.on('load', () => {
-            // Ajouter la source de données pour les bâtiments
-            map.addSource('openmaptiles', {
-                url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${MAPTILER_KEY}`,
-                type: 'vector',
-            });
+        // Charger le fichier GeoJSON depuis GitHub et appliquer l'icône personnalisée à tous les points
+        var geojsonLayer = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
+            pointToLayer: function (feature, latlng) {
+                // Créer le marqueur avec l'icône personnalisée
+                var marker = L.marker(latlng, { icon: customMarker });
 
-            // Ajouter la couche des bâtiments 3D
-            map.addLayer({
-                'id': '3d-buildings',
-                'source': 'openmaptiles',
-                'source-layer': 'building',
-                'type': 'fill-extrusion',
-                'minzoom': 15,
-                'filter': ['!=', ['get', 'hide_3d'], true],
-                'paint': {
-                    'fill-extrusion-color': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'render_height'], 0, 'lightgray', 200, 'royalblue', 400, 'lightblue'
-                    ],
-                    'fill-extrusion-height': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        15,
-                        0,
-                        16,
-                        ['get', 'render_height']
-                    ],
-                    'fill-extrusion-base': ['case',
-                        ['>=', ['get', 'zoom'], 16],
-                        ['get', 'render_min_height'], 0
-                    ]
-                }
-            });
+                // Récupérer les informations du GeoJSON (nom de l'arrêt et ligne de bus)
+                var nomArret = feature.properties.name || "Nom d'arrêt inconnu"; // Nom de l'arrêt
+                var numeroBus = feature.properties.Lignes || "Numéro de bus inconnu"; // Numéro du bus (ligne)
 
-            // Ajouter le fichier GeoJSON
-            fetch('https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson')
-                .then(response => response.json())
-                .then(data => {
-                    // Ajouter des marqueurs personnalisés pour chaque point du GeoJSON
-                    data.features.forEach(feature => {
-                        const coordinates = feature.geometry.coordinates;
-                        const lat = coordinates[1];
-                        const lng = coordinates[0];
+                // Créer un contenu pour le popup avec les infos du GeoJSON
+                var popupContent = "<strong>" + nomArret + "</strong><br/>" +
+                                   "Numéro du bus : " + numeroBus;
 
-                        // Créer un marqueur personnalisé
-                        const marker = new maplibregl.Marker({ color: 'red' })
-                            .setLngLat([lng, lat])
-                            .setPopup(new maplibregl.Popup().setHTML(`
-                                <strong>${feature.properties.name || "Nom d'arrêt inconnu"}</strong><br/>
-                                Numéro du bus : ${feature.properties.Lignes || "Numéro de bus inconnu"}
-                            `))
-                            .addTo(map);
-                    });
-                });
+                // Ajouter un popup au clic sur le marqueur
+                marker.bindPopup(popupContent);
 
-            // Ajouter l'overlay PNG représentant les lignes de bus sur la carte
-            var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]]; // Limites géographiques du PNG
-            map.addSource('png-overlay', {
-                type: 'image',
-                url: 'lignes.png',
-                coordinates: [
-                    [bounds[0][1], bounds[0][0]],  // Coin inférieur gauche
-                    [bounds[1][1], bounds[0][0]],  // Coin inférieur droit
-                    [bounds[1][1], bounds[1][0]],  // Coin supérieur droit
-                    [bounds[0][1], bounds[1][0]]   // Coin supérieur gauche
-                ]
-            });
-
-            map.addLayer({
-                id: 'png-overlay-layer',
-                source: 'png-overlay',
-                type: 'image',
-                paint: {
-                    'raster-opacity': 0.8
-                }
-            });
+                // Retourner le marqueur
+                return marker;
+            }
         });
+
+        // Ajouter le GeoJSON à la carte
+        geojsonLayer.addTo(map);
+
+        // Définir les limites géographiques de ton PNG
+        var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
+
+        // Ajouter l'overlay PNG représentant les lignes de bus sur la carte
+        var pngOverlay = L.imageOverlay('lignes.png', bounds); // Remplacer 'lignes.png' par votre fichier PNG
+        pngOverlay.addTo(map);
     </script>
 </body>
 </html>
