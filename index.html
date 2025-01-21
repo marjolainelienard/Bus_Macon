@@ -23,9 +23,9 @@
         var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
         // Ajouter le fond de carte CartoDB
-https://tile.cartographie.pro/styles/3D/{z}/{x}/{y}.png
-            attribution: '© OpenStreetMap contributors, © CartoDB'
-        .addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap contributors, © CARTO'
+        }).addTo(map);
 
         // Créer l'icône personnalisée avec une taille réduite
         var customMarker = L.icon({
@@ -60,14 +60,12 @@ https://tile.cartographie.pro/styles/3D/{z}/{x}/{y}.png
         // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
 
-// Définir les limites géographiques de ton SVG
-var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
+        // Définir les limites géographiques de ton SVG
+        var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
 
-// Ajouter l'overlay SVG représentant les lignes de bus sur la carte
-var svgOverlay = L.imageOverlay('traces.svg', bounds); // Assure-toi que le chemin de ton SVG est correct
-svgOverlay.addTo(map);
-
-
+        // Ajouter l'overlay SVG représentant les lignes de bus sur la carte
+        var svgOverlay = L.imageOverlay('traces.svg', bounds); // Assure-toi que le chemin de ton SVG est correct
+        svgOverlay.addTo(map);
     </script>
 </body>
 </html>
