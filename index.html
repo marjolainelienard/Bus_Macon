@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte avec fichier GeoJSON et SVG</title>
+    <title>Carte avec fichier GeoJSON et PNG</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
@@ -15,16 +15,16 @@
     </style>
 </head>
 <body>
-    <h1>Carte avec fichier GeoJSON et lignes SVG</h1>
+    <h1>Carte avec fichier GeoJSON et PNG</h1>
     <div id="map"></div>
 
     <script>
         // Créer la carte et définir sa vue initiale
         var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
-        // Ajouter le fond de carte CartoDB
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap contributors, © CARTO'
+        // Ajouter le fond de carte OpenStreetMap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         // Créer l'icône personnalisée avec une taille réduite
@@ -60,12 +60,13 @@
         // Ajouter le GeoJSON à la carte
         geojsonLayer.addTo(map);
 
-        // Définir les limites géographiques de ton SVG
+        // Définir les limites géographiques de ton PNG
         var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
 
-        // Ajouter l'overlay SVG représentant les lignes de bus sur la carte
-        var svgOverlay = L.imageOverlay('traces.svg', bounds); // Assure-toi que le chemin de ton SVG est correct
-        svgOverlay.addTo(map);
+        // Ajouter l'overlay PNG représentant les lignes de bus sur la carte
+        var pngOverlay = L.imageOverlay('lignes.png', bounds); // Mise à jour avec 'lignes.png'
+        pngOverlay.addTo(map);
     </script>
 </body>
 </html>
+s
