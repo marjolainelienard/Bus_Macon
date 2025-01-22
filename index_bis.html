@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte avec fichier GeoJSON et PNG</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
+    <style>
+        #map {
+            height: 100vh; /* La carte occupe toute la hauteur de la fenêtre */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carte avec fichier GeoJSON et PNG</h1>
+    <div id="map"></div>
+
+    <script>
+        // Créer la carte et définir sa vue initiale
+        var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
+
+        // Charger et afficher le fond défini par le fichier basic.json
+        var geojsonLayer = new L.GeoJSON.AJAX("basic.json", {
+            onEachFeature: function (feature, layer) {
+                // Si nécessaire, personnaliser le style ici
+                layer.setStyle({
+                    color: 'blue',    // Couleur des polygones/lines
+                    weight: 2,        // Épaisseur des lignes
+                    opacity: 0.6      // Opacité des objets géographiques
+                });
+
+                // Ajoute un popup pour chaque élément du GeoJSON
+                if (feature.properties && feature.properties.name) {
+                    layer.bindPopup("<strong>" + feature.properties.name + "</strong>");
+                }
+            }
+        }).addTo(map);
+
+        // Créer l'icône personnalisée pour les marqueurs
+        var customMarker = L.icon({
+            iconUrl: 'point.png',  // Assure-toi que le chemin vers ton icône est correct
+            iconSize: [10, 10],  // Taille de l'icône (ajustée à 10x10 pixels)
+            iconAnchor: [5, 10],  // Point d'ancrage ajusté à la nouvelle taille
+            popupAnchor: [0, -10]  // Position du popup ajustée
+        });
+
+        // Charger le fichier GeoJSON des arrêts de bus et appliquer l'icône personnalisée
+        var geojsonLayerBusStops = new L.GeoJSON.AJAX("https://raw.githubusercontent.com/marjolainelienard/bus_macon/main/network.geojson", {
+            pointToLayer: function (feature, latlng) {
+                var marker = L.marker(latlng, { icon: customMarker });
+
+                var nomArret = feature.properties.name || "Nom d'arrêt inconnu";
+                var numeroBus = feature.properties.Lignes || "Numéro de bus inconnu";
+
+                var popupContent = "<strong>" + nomArret + "</strong><br/>" +
+                                   "Numéro du bus : " + numeroBus;
+
+                marker.bindPopup(popupContent);
+
+                return marker;
+            }
+        });
+
+        // Ajouter le GeoJSON des arrêts de bus à la carte
+        geojsonLayerBusStops.addTo(map);
+
+        // Définir les limites géographiques de ton PNG
+        var bounds = [[49.086057, -1.485948], [49.021530, -1.409350]];
+
+        // Ajouter l'overlay PNG représentant les lignes de bus sur la carte
+        var pngOverlay = L.imageOverlay('lignes.png', bounds); // Remplacer 'lignes.png' par votre fichier PNG
+        pngOverlay.addTo(map);
+    </script>
+</body>
+</html>
