@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte avec fichier GeoJSON et PNG</title>
+    <title>Carte avec MapTiler et PNG</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.vectorgrid/dist/Leaflet.VectorGrid.js"></script>
     <script src="https://unpkg.com/leaflet-ajax/dist/leaflet.ajax.min.js"></script>
     <style>
         #map {
@@ -15,28 +16,27 @@
     </style>
 </head>
 <body>
-    <h1>Carte avec fichier GeoJSON et PNG</h1>
+    <h1>Carte avec MapTiler et PNG</h1>
     <div id="map"></div>
 
     <script>
         // Créer la carte et définir sa vue initiale
         var map = L.map('map').setView([49.053291, -1.436042], 13); // Coordonnées de Coutances (exemple)
 
-        // Charger et afficher le fond défini par le fichier basic.json
-        var geojsonLayer = new L.GeoJSON.AJAX("basic.json", {
-            onEachFeature: function (feature, layer) {
-                // Si nécessaire, personnaliser le style ici
-                layer.setStyle({
-                    color: 'blue',    // Couleur des polygones/lines
-                    weight: 2,        // Épaisseur des lignes
-                    opacity: 0.6      // Opacité des objets géographiques
-                });
-
-                // Ajoute un popup pour chaque élément du GeoJSON
-                if (feature.properties && feature.properties.name) {
-                    layer.bindPopup("<strong>" + feature.properties.name + "</strong>");
-                }
-            }
+        // Ajouter des tuiles vectorielles MapTiler
+        L.vectorGrid.protobuf("https://api.maptiler.com/tiles/v3-openmaptiles/{z}/{x}/{y}.pbf?key=YOUR_API_KEY", {
+            vectorTileLayerStyles: {
+                // Applique le style pour les couches vectorielles (par exemple, le fond, les zones résidentielles, etc.)
+                background: {
+                    fillColor: "hsl(47, 26%, 88%)"
+                },
+                'landuse-residential': {
+                    fillColor: "hsl(47, 13%, 86%)",
+                    fillOpacity: 0.7
+                },
+                // Ajouter d'autres couches selon ton fichier basic.json
+            },
+            maxZoom: 14
         }).addTo(map);
 
         // Créer l'icône personnalisée pour les marqueurs
